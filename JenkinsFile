@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    parameters{
+        booleanParam(name: 'Test_Project', defaultValue: true)
+    }
+    stages{
+        stage("Checkout"){
+            steps{
+                git url: "https://github.com/Mecgrindy/devops.git"
+            }
+        }
+        stage("Compile"){
+            steps{
+                sh "./gradlew compileJava"
+            }
+        }
+        stage("Unit Test"){
+            when {expression{return params.Test_Project}}
+            steps{
+                sh "./gradlew test"
+            }
+        }
+    }
+}
